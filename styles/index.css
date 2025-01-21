@@ -292,6 +292,7 @@ p {
   position: relative;
   z-index: 2;
   top: -111px;
+  overflow: hidden;
 }
 
 .hero {
