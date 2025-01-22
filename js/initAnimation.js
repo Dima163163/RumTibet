@@ -4,35 +4,19 @@ export const initAnimation = () => {
   const animItems = [...animItemsLeft, ...animItemsRight]
 
 
-  const offset = (el) => {
-    const rect = el.getBoundingClientRect();
-    const scrollLeft = window.scrollX || document.documentElement.scrollLeft;
-    const scrollTop = window.scrollY || document.documentElement.scrollTop;
-    return {
-      top: rect.top + scrollTop,
-      left: rect.left + scrollLeft,
-    }
-  }
-
   const animationOnScroll = () => {
-    for (let index = 0; index < animItems.length; index++) {
-      const animItem = animItems[index];
-      const animItemHeight = animItem.offsetHeight;
+    for (let i = 0; i < animItems.length; i++) {
+      const elemItem = animItems[i];
+      const positionElemItem = elemItem.getBoundingClientRect();
+      const elemItemTop = window.scrollY + positionElemItem.top;
+      const elemItemBottom = elemItemTop + positionElemItem.height;
+      const windowHeight = document.documentElement.clientHeight;
 
-      const animItemOffset = offset(animItem).top;
-      const animStart = 4;
-
-      let animItemPoint = window.innerHeight - animItemHeight / animStart;
-
-      if (animItemHeight > window.innerHeight) {
-        animItemPoint = window.innerHeight - window.innerHeight / animStart;
-      }
-
-      if ((scrollY > animItemOffset - animItemPoint) && scrollY < (animItemOffset + animItemHeight)) {
-        animItem.classList.add('active')
+      if ((scrollY + windowHeight > elemItemTop) && (scrollY < elemItemBottom)) {
+        elemItem.classList.add('active')
       } else {
-        if (!animItem.classList.contains('anim-no-hide')) {
-          animItem.classList.remove('active')
+        if (!elemItem.classList.contains('anim-no-hide')) {
+          elemItem.classList.remove('active')
         }
       }
     }
@@ -41,7 +25,8 @@ export const initAnimation = () => {
   if (animItems.length > 0) {
     window.addEventListener('scroll', animationOnScroll)
   }
+
   setTimeout(() => {
-    animationOnScroll()
-  }, 300)
+    animationOnScroll();
+  }, 500)
 }
